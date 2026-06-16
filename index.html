@@ -96,7 +96,7 @@
 
       .grid {
         display: grid;
-        grid-template-columns: 380px 1fr;
+        grid-template-columns: 323px 1fr;
         gap: 18px;
         align-items: start;
       }
@@ -706,8 +706,11 @@
       function handleSheetData(result) {
         console.log("DATA DARI GOOGLE SHEETS:", result);
 
-        if (result.status === "error") {
-          showMessage(result.message || "Gagal membaca data.", "error");
+        if (!result || result.status === "error") {
+          showMessage(
+            (result && result.message) || "Gagal membaca data.",
+            "error",
+          );
           return;
         }
 
@@ -747,10 +750,10 @@
           const totalTabungan = getTotalTabunganByDonatur(item);
 
           select.innerHTML += `
-          <option value="${index}">
-            ${escapeHtml(item.nama)} - ${formatRupiah(totalTabungan)}
-          </option>
-        `;
+            <option value="${index}">
+              ${escapeHtml(item.nama)} - ${formatRupiah(totalTabungan)}
+            </option>
+          `;
         });
       }
 
@@ -763,42 +766,42 @@
         }
 
         let html = `
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>No HP</th>
-                <th>Alamat</th>
-                <th>Total Tabungan</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>No HP</th>
+                  <th>Alamat</th>
+                  <th>Total Tabungan</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
 
         donaturData.forEach((item, index) => {
           const totalTabungan = getTotalTabunganByDonatur(item);
 
           html += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>
-              <strong>${escapeHtml(item.nama)}</strong>
-              <div class="muted">${escapeHtml(item.tanggal)}</div>
-            </td>
-            <td>${escapeHtml(item.nohp)}</td>
-            <td>${escapeHtml(item.alamat)}</td>
-            <td class="amount">${formatRupiah(totalTabungan)}</td>
-          </tr>
-        `;
+            <tr>
+              <td>${index + 1}</td>
+              <td>
+                <strong>${escapeHtml(item.nama)}</strong>
+                <div class="muted">${escapeHtml(item.tanggal)}</div>
+              </td>
+              <td>${escapeHtml(item.nohp)}</td>
+              <td>${escapeHtml(item.alamat)}</td>
+              <td class="amount">${formatRupiah(totalTabungan)}</td>
+            </tr>
+          `;
         });
 
         html += `
-            </tbody>
-          </table>
-        </div>
-      `;
+              </tbody>
+            </table>
+          </div>
+        `;
 
         wrapper.innerHTML = html;
       }
@@ -812,67 +815,86 @@
         }
 
         let html = `
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Donatur</th>
-                <th>Jumlah</th>
-                <th>Catatan</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Tanggal</th>
+                  <th>Donatur</th>
+                  <th>Jumlah</th>
+                  <th>Catatan</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
 
         transaksiData
           .slice()
           .reverse()
           .forEach((item, index) => {
             html += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${escapeHtml(item.tanggal)}</td>
-            <td>
-              <strong>${escapeHtml(item.nama)}</strong>
-              <div class="muted">${escapeHtml(item.nohp)}</div>
-            </td>
-            <td class="amount">${formatRupiah(item.jumlah)}</td>
-            <td>${escapeHtml(item.catatan)}</td>
-          </tr>
-        `;
+              <tr>
+                <td>${index + 1}</td>
+                <td>${escapeHtml(item.tanggal)}</td>
+                <td>
+                  <strong>${escapeHtml(item.nama)}</strong>
+                </td>
+                <td class="amount">${formatRupiah(item.jumlah)}</td>
+                <td>${escapeHtml(item.catatan)}</td>
+              </tr>
+            `;
           });
 
         html += `
-            </tbody>
-          </table>
-        </div>
-      `;
+              </tbody>
+            </table>
+          </div>
+        `;
 
         wrapper.innerHTML = html;
       }
 
       function getTotalTabunganByDonatur(donatur) {
+        const namaDonatur = normalizeName(donatur.nama);
+
         return transaksiData
           .filter((transaksi) => {
-            return (
-              normalizePhone(transaksi.nohp) === normalizePhone(donatur.nohp)
-            );
+            return normalizeName(transaksi.nama) === namaDonatur;
           })
           .reduce((total, transaksi) => {
             return total + cleanNumber(transaksi.jumlah);
           }, 0);
       }
 
-      function normalizePhone(value) {
+      function normalizeName(value) {
         return String(value || "")
-          .replace(/\D/g, "")
-          .trim();
+          .trim()
+          .toLowerCase();
       }
 
       function cleanNumber(value) {
-        return Number(String(value || "0").replace(/[^\d]/g, "")) || 0;
+        if (value === null || value === undefined || value === "") {
+          return 0;
+        }
+
+        if (typeof value === "number") {
+          return value;
+        }
+
+        let cleanValue = String(value)
+          .replace(/Rp/gi, "")
+          .replace(/\s/g, "")
+          .replace(/\./g, "")
+          .replace(/,/g, ".");
+
+        const number = Number(cleanValue);
+
+        if (isNaN(number)) {
+          return 0;
+        }
+
+        return number;
       }
 
       document
@@ -918,7 +940,6 @@
           const data = {
             type: "transaksi",
             nama: selectedDonatur.nama,
-            nohp: selectedDonatur.nohp,
             jumlah: document.getElementById("jumlahTransaksi").value,
             catatan: document.getElementById("catatanTransaksi").value.trim(),
           };
@@ -977,7 +998,6 @@
           if (data.type === "transaksi") {
             url += "&action=insertTransaksi";
             url += "&nama=" + encodeURIComponent(data.nama);
-            url += "&nohp=" + encodeURIComponent(data.nohp);
             url += "&jumlah=" + encodeURIComponent(data.jumlah);
             url += "&catatan=" + encodeURIComponent(data.catatan);
           }
