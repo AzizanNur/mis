@@ -66,17 +66,20 @@
               <h5 class="fw-bold mb-3">Data Peserta</h5>
 
               <p class="text-muted mb-1">Nama Peserta</p>
-              <h4 class="fw-bold mb-3" id="donorName">Bapak Ahmad</h4>
+              <h4 class="fw-bold mb-3" id="donorName"></h4>
 
               <p class="mb-2">
                 <strong>No Referensi:</strong><br />
-                <span id="referenceNo">QB-2026-0001</span>
+                <span id="referenceNo"></span>
               </p>
 
-              <p class="mb-0">
-                <strong>Status:</strong><br />
-                <span class="badge bg-success">Aktif</span>
-              </p>
+              <div class="bg-light rounded p-3">
+                <div class="text-muted">Total Tabungan</div>
+
+                <div id="totalTabungan" class="fs-4 fw-bold text-success">
+                  Rp 0
+                </div>
+              </div>
             </div>
           </div>
 
@@ -182,7 +185,7 @@
 
           <div class="card shadow-sm border-0">
             <div class="card-body">
-              <h5 class="fw-bold mb-3">History Pembayaran</h5>
+              <h5 class="fw-bold mb-3">Riwayat Pembayaran</h5>
 
               <div class="table-responsive">
                 <table class="table table-bordered align-middle">
@@ -190,43 +193,12 @@
                     <tr>
                       <th>Tanggal</th>
                       <th>Nominal</th>
-                      <th>Bank</th>
                       <th>Status</th>
                       <th>Catatan</th>
                     </tr>
                   </thead>
 
-                  <tbody>
-                    <tr>
-                      <td>10-01-2026</td>
-                      <td>Rp 500.000</td>
-                      <td>BCA</td>
-                      <td>
-                        <span class="badge bg-success">Verified</span>
-                      </td>
-                      <td>Pembayaran pertama</td>
-                    </tr>
-
-                    <tr>
-                      <td>10-02-2026</td>
-                      <td>Rp 500.000</td>
-                      <td>BCA</td>
-                      <td>
-                        <span class="badge bg-success">Verified</span>
-                      </td>
-                      <td>Pembayaran kedua</td>
-                    </tr>
-
-                    <tr>
-                      <td>12-03-2026</td>
-                      <td>Rp 250.000</td>
-                      <td>BCA</td>
-                      <td>
-                        <span class="badge bg-warning text-dark">Pending</span>
-                      </td>
-                      <td>Menunggu verifikasi admin</td>
-                    </tr>
-                  </tbody>
+                  <tbody></tbody>
                 </table>
               </div>
 
@@ -262,6 +234,75 @@
         alert(
           "Demo saja. Untuk sistem asli, form ini perlu dihubungkan ke backend / database.",
         );
+      }
+    </script>
+
+    <script>
+      const API =
+        "https://script.google.com/macros/s/AKfycbwz2nDLiuz83NSHj1fagpb9AYkqOxx2xhHYDJr-pQ2KqW2WPdQC1sMdV-GXfGscjP0/exec";
+
+      const id = new URLSearchParams(location.search).get("id");
+
+      if (!id) {
+        alert("ID peserta tidak ditemukan");
+      }
+
+      fetch(API + "?action=getProfile&id=" + id)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.status !== "success") {
+            alert(data.message);
+            return;
+          }
+
+          document.getElementById("donorName").innerText = data.profile.nama;
+
+          document.getElementById("referenceNo").innerText =
+            data.profile.idunique;
+
+          renderTotalTabungan(data.transaksi);
+
+          renderHistory(data.transaksi);
+        });
+
+      function renderHistory(list) {
+        let html = "";
+        let status = `<span class="badge bg-warning text-dark">Pending</span>`;
+
+        list.forEach((t) => {
+          if (t.status == 1) {
+            status = `<span class="badge bg-success">Success</span>`;
+          } else if (t.status == 2) {
+            status = `<span class="badge bg-danger">Rejected</span>`;
+          } else {
+            status = `<span class="badge bg-warning text-dark">Pending</span>`;
+          }
+          html += `
+              <tr>
+              <td>${t.tanggal}</td>
+              <td>Rp ${Number(t.jumlah).toLocaleString("id-ID")}</td>
+              <td>
+                ${status}
+              </td>
+              <td>${t.catatan}</td>
+              </tr>
+              `;
+        });
+
+        document.querySelector("tbody").innerHTML = html;
+      }
+
+      function renderTotalTabungan(list) {
+        const total = list
+          .filter((trx) => {
+            return String(trx.status) === "1";
+          })
+          .reduce((sum, trx) => {
+            return sum + Number(trx.jumlah || 0);
+          }, 0);
+
+        document.getElementById("totalTabungan").innerText =
+          "Rp " + total.toLocaleString("id-ID");
       }
     </script>
   </body>
