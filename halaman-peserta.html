@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <title>Tabungan Qurban Peserta</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="manifest.json" />
+
+    <meta name="theme-color" content="#198754" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Tabungan Qurban" />
 
     <!-- Bootstrap 5 -->
     <link
@@ -48,6 +55,9 @@
   </head>
 
   <body>
+    <button id="installBtn" class="btn btn-success mb-3" style="display: none">
+      Install Aplikasi
+    </button>
     <section class="hero py-5 mb-4">
       <div class="container text-center">
         <h1 class="fw-bold mb-2">Tabungan Qurban</h1>
@@ -89,14 +99,14 @@
 
               <div class="account-box">
                 <p class="mb-1 text-muted">Transfer ke</p>
-                <h5 class="fw-bold mb-2">Bank BCA</h5>
+                <h5 class="fw-bold mb-2">Bank Jago Syariah</h5>
 
                 <p class="mb-1 text-muted">No Rekening</p>
 
                 <div
                   class="d-flex justify-content-between align-items-center mb-2"
                 >
-                  <h4 class="fw-bold mb-0" id="bcaAccount">1234567890</h4>
+                  <h4 class="fw-bold mb-0" id="bcaAccount">504779357697</h4>
 
                   <button
                     type="button"
@@ -108,10 +118,10 @@
                 </div>
 
                 <p class="mb-1 text-muted">Atas Nama</p>
-                <h6 class="fw-bold mb-0">Panitia Qurban</h6>
+                <h6 class="fw-bold mb-0">An. Gibas</h6>
               </div>
 
-              <div class="alert alert-warning mt-3 mb-0 small-note">
+              <div class="alert alert-warning mt-3 mb-0 small-note d-none">
                 Setelah transfer, silakan upload bukti pembayaran melalui form
                 di halaman ini.
               </div>
@@ -121,7 +131,7 @@
 
         <div class="col-lg-8">
           <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body">
+            <div class="card-body" style="display: none">
               <h5 class="fw-bold mb-3">Upload Bukti Pembayaran</h5>
 
               <form
@@ -303,6 +313,29 @@
 
         document.getElementById("totalTabungan").innerText =
           "Rp " + total.toLocaleString("id-ID");
+      }
+
+      let deferredPrompt;
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+
+        deferredPrompt = e;
+
+        document.getElementById("installBtn").style.display = "block";
+      });
+
+      document.getElementById("installBtn").onclick = async () => {
+        deferredPrompt.prompt();
+
+        await deferredPrompt.userChoice;
+
+        deferredPrompt = null;
+      };
+    </script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("service-worker.js");
       }
     </script>
   </body>

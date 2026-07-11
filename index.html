@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="id">
   <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
     <meta charset="UTF-8" />
     <title>Tabungan Qurban Tiga Putra Farm 2026</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -539,145 +543,168 @@
     </style>
   </head>
   <body>
-    <div class="app">
-      <div class="header">
-        <h1>Tabungan Qurban Tiga Putra Farm 2026</h1>
-        <p>
-          Input peserta dan transaksi tabungan qurban menggunakan Google Sheets.
-        </p>
-      </div>
+    <div id="loginPage">
+      <div class="card p-4 mx-auto mt-5" style="max-width: 400px">
+        <h3 class="mb-3">Login Admin</h3>
 
-      <div class="summary">
-        <div class="summary-card">
-          <div class="label">Jumlah Peserta</div>
-          <div class="value" id="summaryDonatur">0</div>
+        <input id="username" class="form-control mb-2" placeholder="Username" />
+
+        <input
+          id="password"
+          type="password"
+          class="form-control mb-3"
+          placeholder="Password"
+        />
+
+        <button class="btn btn-success w-100" onclick="login()">Login</button>
+      </div>
+    </div>
+
+    <div id="adminPage" style="display: none">
+      <button class="btn btn-danger" onclick="logout()">Logout</button>
+      <div class="app">
+        <div class="header">
+          <h1>Tabungan Qurban Tiga Putra Farm 2026</h1>
+          <p>
+            Input peserta dan transaksi tabungan qurban menggunakan Google
+            Sheets.
+          </p>
         </div>
 
-        <div class="summary-card">
-          <div class="label">Jumlah Transaksi</div>
-          <div class="value" id="summaryTransaksi">0</div>
-        </div>
-
-        <div class="summary-card">
-          <div class="label">Total Tabungan</div>
-          <div class="value" id="summaryTotal">Rp0</div>
-        </div>
-      </div>
-
-      <div id="messageBox" class="message"></div>
-
-      <div class="menu">
-        <button
-          type="button"
-          id="btnDonatur"
-          class="active"
-          onclick="showSection('donatur')"
-        >
-          Tambah Peserta
-        </button>
-
-        <button
-          type="button"
-          id="btnTransaksi"
-          onclick="showSection('transaksi')"
-        >
-          Masukkan Transaksi
-        </button>
-      </div>
-
-      <div id="sectionDonatur" class="section active">
-        <div class="grid">
-          <div class="card">
-            <h2>Form Peserta</h2>
-
-            <form id="formDonatur">
-              <label>Nama Peserta</label>
-              <input
-                type="text"
-                id="namaDonatur"
-                placeholder="Contoh: Ahmad Bin Ali"
-                required
-              />
-
-              <label>No HP</label>
-              <input
-                type="text"
-                id="nohpDonatur"
-                placeholder="Contoh: 08123456789"
-                required
-              />
-
-              <label>Alamat</label>
-              <textarea
-                id="alamatDonatur"
-                rows="4"
-                placeholder="Alamat donatur"
-                required
-              ></textarea>
-
-              <button type="submit" class="submit-btn" id="submitDonatur">
-                Simpan Data
-              </button>
-            </form>
+        <div class="summary">
+          <div class="summary-card">
+            <div class="label">Jumlah Peserta</div>
+            <div class="value" id="summaryDonatur">0</div>
           </div>
 
-          <div class="card">
-            <div class="list-head">
-              <h2>Data Peserta</h2>
-              <button type="button" class="small-btn" onclick="loadData()">
-                Refresh
-              </button>
+          <div class="summary-card">
+            <div class="label">Jumlah Transaksi</div>
+            <div class="value" id="summaryTransaksi">0</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="label">Total Tabungan</div>
+            <div class="value" id="summaryTotal">Rp0</div>
+          </div>
+        </div>
+
+        <div id="messageBox" class="message"></div>
+
+        <div class="menu">
+          <button
+            type="button"
+            id="btnDonatur"
+            class="active"
+            onclick="showSection('donatur')"
+          >
+            Tambah Peserta
+          </button>
+
+          <button
+            type="button"
+            id="btnTransaksi"
+            onclick="showSection('transaksi')"
+          >
+            Masukkan Transaksi
+          </button>
+        </div>
+
+        <div id="sectionDonatur" class="section active">
+          <div class="grid">
+            <div class="card">
+              <h2>Form Peserta</h2>
+
+              <form id="formDonatur">
+                <label>Nama Peserta</label>
+                <input
+                  type="text"
+                  id="namaDonatur"
+                  placeholder="Contoh: Ahmad Bin Ali"
+                  required
+                />
+
+                <label>No HP</label>
+                <input
+                  type="text"
+                  id="nohpDonatur"
+                  placeholder="Contoh: 08123456789"
+                  required
+                />
+
+                <label>Alamat</label>
+                <textarea
+                  id="alamatDonatur"
+                  rows="4"
+                  placeholder="Alamat donatur"
+                  required
+                ></textarea>
+
+                <button type="submit" class="submit-btn" id="submitDonatur">
+                  Simpan Data
+                </button>
+              </form>
             </div>
 
-            <div id="donaturList">
-              <div class="empty">Memuat data peserta...</div>
+            <div class="card">
+              <div class="list-head">
+                <h2>Data Peserta</h2>
+                <button type="button" class="small-btn" onclick="loadData()">
+                  Refresh
+                </button>
+              </div>
+
+              <div id="donaturList">
+                <div class="empty">Memuat data peserta...</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div id="sectionTransaksi" class="section">
-        <div class="grid">
-          <div class="card">
-            <h2>Form Transaksi</h2>
+        <div id="sectionTransaksi" class="section">
+          <div class="grid">
+            <div class="card">
+              <h2>Form Transaksi</h2>
 
-            <form id="formTransaksi">
-              <label>Pilih Peserta</label>
-              <select id="donaturSelect" required>
-                <option value="">Memuat data peserta...</option>
-              </select>
+              <form id="formTransaksi">
+                <label>Pilih Peserta</label>
+                <select id="donaturSelect" required>
+                  <option value="">Memuat data peserta...</option>
+                </select>
 
-              <label>Jumlah Tabungan</label>
-              <input
-                type="number"
-                id="jumlahTransaksi"
-                placeholder="Contoh: 100000"
-                required
-              />
+                <label>Jumlah Setoran</label>
+                <input
+                  type="text"
+                  id="jumlahTransaksi"
+                  class="form-control"
+                  placeholder="Rp 0"
+                  autocomplete="off"
+                  required
+                />
 
-              <label>Catatan</label>
-              <textarea
-                id="catatanTransaksi"
-                rows="4"
-                placeholder="Contoh: Tabungan minggu pertama"
-              ></textarea>
+                <label>Catatan</label>
+                <textarea
+                  id="catatanTransaksi"
+                  rows="4"
+                  placeholder="Contoh: Tabungan minggu pertama"
+                ></textarea>
 
-              <button type="submit" class="submit-btn" id="submitTransaksi">
-                Simpan Transaksi
-              </button>
-            </form>
-          </div>
-
-          <div class="card">
-            <div class="list-head">
-              <h2>Riwayat Transaksi</h2>
-              <button type="button" class="small-btn" onclick="loadData()">
-                Refresh
-              </button>
+                <button type="submit" class="submit-btn" id="submitTransaksi">
+                  Simpan Transaksi
+                </button>
+              </form>
             </div>
 
-            <div id="transaksiList">
-              <div class="empty">Memuat log transaksi...</div>
+            <div class="card">
+              <div class="list-head">
+                <h2>Riwayat Transaksi</h2>
+                <button type="button" class="small-btn" onclick="loadData()">
+                  Refresh
+                </button>
+              </div>
+
+              <div id="transaksiList">
+                <div class="empty">Memuat log transaksi...</div>
+              </div>
             </div>
           </div>
         </div>
@@ -690,6 +717,54 @@
 
       let donaturData = [];
       let transaksiData = [];
+
+      const inputJumlah = document.getElementById("jumlahTransaksi");
+
+      inputJumlah.addEventListener("input", function () {
+        let angka = this.value.replace(/\D/g, "");
+
+        if (angka === "") {
+          this.value = "";
+          return;
+        }
+
+        this.value = "Rp " + Number(angka).toLocaleString("id-ID");
+      });
+
+      function login() {
+        fetch(
+          SCRIPT_URL +
+            "?action=loginAdmin" +
+            "&username=" +
+            encodeURIComponent(document.getElementById("username").value) +
+            "&password=" +
+            encodeURIComponent(document.getElementById("password").value),
+        )
+          .then((r) => r.json())
+          .then((res) => {
+            if (res.status == "success") {
+              localStorage.setItem("adminLogin", "1");
+
+              showAdmin();
+            } else {
+              alert(res.message);
+            }
+          });
+      }
+
+      function logout() {
+        localStorage.removeItem("adminLogin");
+
+        location.reload();
+      }
+
+      function showAdmin() {
+        document.getElementById("loginPage").style.display = "none";
+
+        document.getElementById("adminPage").style.display = "block";
+
+        loadData();
+      }
 
       function showSection(type) {
         document.getElementById("sectionDonatur").classList.remove("active");
@@ -800,7 +875,7 @@
                   <th>No HP</th>
                   <th>Alamat</th>
                   <th>Total Tabungan</th>
-                  <th>Link</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -819,7 +894,28 @@
               <td>${escapeHtml(item.nohp)}</td>
               <td>${escapeHtml(item.alamat)}</td>
               <td class="amount">${formatRupiah(totalTabungan)}</td>
-              <td><a href="halaman-peserta.html?id=${item.idunique}" target="_blank()">Lihat Profil</a></td>
+              <td>
+                <div class="d-flex gap-2">
+
+                  <a
+                    href="halaman-peserta.html?id=${item.idunique}"
+                    target="_blank"
+                    class="btn btn-sm btn-success"
+                    title="Lihat Profil"
+                  >
+                    <i class="bi bi-person-badge"></i>
+                  </a>
+
+                  <button
+                    class="btn btn-sm btn-primary"
+                    title="Copy Link"
+                    onclick="copyProfileLink('${item.idunique}')"
+                  >
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+
+                </div>
+              </td>
             </tr>
           `;
         });
@@ -831,6 +927,23 @@
         `;
 
         wrapper.innerHTML = html;
+      }
+
+      function copyProfileLink(id) {
+        const url =
+          location.origin +
+          location.pathname.replace("index.html", "halaman-peserta.html") +
+          "?id=" +
+          id;
+
+        navigator.clipboard
+          .writeText(url)
+          .then(() => {
+            alert("Link profil berhasil disalin.");
+          })
+          .catch(() => {
+            prompt("Salin link berikut:", url);
+          });
       }
 
       function renderTransaksiList() {
@@ -996,6 +1109,7 @@ Pending
           const data = {
             type: "transaksi",
             nama: selectedDonatur.nama,
+            idunique: selectedDonatur.idunique,
             jumlah: document.getElementById("jumlahTransaksi").value,
             catatan: document.getElementById("catatanTransaksi").value.trim(),
           };
@@ -1054,6 +1168,7 @@ Pending
           if (data.type === "transaksi") {
             url += "&action=insertTransaksi";
             url += "&nama=" + encodeURIComponent(data.nama);
+            url += "&idunique=" + encodeURIComponent(data.idunique);
             url += "&jumlah=" + encodeURIComponent(data.jumlah);
             url += "&catatan=" + encodeURIComponent(data.catatan);
           }
@@ -1099,7 +1214,9 @@ Pending
           .replaceAll("'", "&#039;");
       }
 
-      loadData();
+      if (localStorage.getItem("adminLogin") == "1") {
+        showAdmin();
+      }
 
       let selectedRow = null;
 
