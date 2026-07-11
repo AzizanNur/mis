@@ -851,11 +851,11 @@
         const select = document.getElementById("donaturSelect");
 
         if (!donaturData.length) {
-          select.innerHTML = `<option value="">Belum ada donatur</option>`;
+          select.innerHTML = `<option value="">Belum ada peserta</option>`;
           return;
         }
 
-        select.innerHTML = `<option value="">-- Pilih Donatur --</option>`;
+        select.innerHTML = `<option value="">-- Pilih Peserta --</option>`;
 
         donaturData.forEach((item, index) => {
           const totalTabungan = getTotalTabunganByDonatur(item);
@@ -975,7 +975,7 @@
                 <tr>
                   <th>No</th>
                   <th>Tanggal</th>
-                  <th>Donatur</th>
+                  <th>Peserta</th>
                   <th>Jumlah</th>
                   <th>Catatan</th>
                   <th>Status</th>
@@ -1110,7 +1110,7 @@ Pending
           const selectedIndex = document.getElementById("donaturSelect").value;
 
           if (selectedIndex === "") {
-            showMessage("Silakan pilih donatur dahulu.", "error");
+            showMessage("Silakan pilih peserta dahulu.", "error");
             return;
           }
 
