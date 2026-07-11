@@ -648,11 +648,22 @@
             <div class="card">
               <div class="list-head">
                 <h2>Data Peserta</h2>
-                <button type="button" class="small-btn" onclick="loadData()">
-                  Refresh
-                </button>
-              </div>
 
+                <div class="d-flex gap-2">
+                  <input
+                    type="text"
+                    id="searchDonatur"
+                    class="form-control"
+                    placeholder="Cari nama..."
+                    onkeyup="renderDonaturList()"
+                    style="max-width: 220px"
+                  />
+
+                  <button type="button" class="small-btn" onclick="loadData()">
+                    Refresh
+                  </button>
+                </div>
+              </div>
               <div id="donaturList">
                 <div class="empty">Memuat data peserta...</div>
               </div>
@@ -858,6 +869,11 @@
       }
 
       function renderDonaturList() {
+        const keyword = document
+          .getElementById("searchDonatur")
+          .value.toLowerCase()
+          .trim();
+
         const wrapper = document.getElementById("donaturList");
 
         if (!donaturData.length) {
@@ -881,10 +897,12 @@
               <tbody>
         `;
 
-        donaturData.forEach((item, index) => {
-          const totalTabungan = getTotalTabunganByDonatur(item);
+        donaturData
+          .filter((item) => item.nama.toLowerCase().includes(keyword))
+          .forEach((item, index) => {
+            const totalTabungan = getTotalTabunganByDonatur(item);
 
-          html += `
+            html += `
             <tr>
               <td>${index + 1}</td>
               <td>
@@ -918,7 +936,7 @@
               </td>
             </tr>
           `;
-        });
+          });
 
         html += `
               </tbody>
