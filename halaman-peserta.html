@@ -121,9 +121,9 @@
                 <h6 class="fw-bold mb-0">An. Gibas</h6>
               </div>
 
-              <div class="alert alert-warning mt-3 mb-0 small-note d-none">
-                Setelah transfer, silakan upload bukti pembayaran melalui form
-                di halaman ini.
+              <div class="alert alert-warning mt-3 mb-0 small-note">
+                Setelah transfer, silakan upload bukti pembayaran ke no wa:
+                0852-5947-6717 (Abah Nanang)
               </div>
             </div>
           </div>
@@ -229,13 +229,13 @@
           navigator.clipboard
             .writeText(accountNumber)
             .then(function () {
-              alert("Nomor rekening BCA berhasil disalin: " + accountNumber);
+              alert("Nomor rekening berhasil disalin: " + accountNumber);
             })
             .catch(function () {
               alert("Gagal menyalin nomor rekening.");
             });
         } else {
-          alert("Nomor rekening BCA: " + accountNumber);
+          alert("Nomor rekening : " + accountNumber);
         }
       }
 
